@@ -6,6 +6,8 @@ import Home from './components/Home';
 import About from './components/About';
 import SignIn from './features/auth/SignIn';
 import ButtonAppBar from './components/ButtonAppBar';
+import { User } from './features/user/User';
+import UserDashboard from './features/user/UserDashboard';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="about" element={<About />} />
         <Route path="signin" element={<SignIn/>}/>
         <Route path="counter" element={<Counter/>}/>
+        <Route path="user/profile" element={<User/>}/>
+        <Route path="users/dashboard" element={<UserDashboard/>}/>
       </Routes>
       <header className="App-header">
         

@@ -15,7 +15,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useAppDispatch } from '../../app/hooks';
-import { authActions } from './authSlice';
+import { authActions, loginAsync } from './authSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props: any) {
   return (
@@ -33,17 +34,21 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
+  // let navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    dispatch(authActions.login());
-
+    await dispatch(loginAsync({
+        password: data.get('password'),
+        account: data.get('account'),
+    }))
+    // .then((res) => {
+    //   if(!res.error)
+    // })
+    // navigate('/', {replace: true})
   };
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -68,9 +73,9 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
+              id="account"
+              label="Email Address or Account"
+              name="account"
               autoComplete="email"
               autoFocus
             />
