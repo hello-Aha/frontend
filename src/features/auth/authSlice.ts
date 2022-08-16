@@ -20,8 +20,6 @@ export const loginAsync = createAsyncThunk(
 		try {
 			const response = await login(data);
 			const result = await response.json();
-			console.log(response);
-			console.log(result);
 			if(!response.ok) throw result;
 			const {email, firstName, lastName, displayName, isActive, account, accessToken} = result.data;
 			thunkAPI.dispatch(userActions.setUser(
@@ -34,10 +32,7 @@ export const loginAsync = createAsyncThunk(
 					account,
 				}
 			))
-			console.log(accessToken);
 			cookies.set('accessToken', accessToken, {path:'/'});
-			console.log(cookies.get('accessToken'))
-			// data.navigate('/', {replace: true})
 			return result;
 
 		} catch (error) {
@@ -56,6 +51,7 @@ export const authSlice = createSlice({
 		},
 		logout: (state) => {
 			state.isAuthenticated = false;
+			cookies.remove('accessToken', {path: '/'});
 		},
 	},
 	extraReducers: (builder) => {

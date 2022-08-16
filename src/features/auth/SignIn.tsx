@@ -1,4 +1,4 @@
-import * as React from 'react';
+import  React, { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,9 +14,11 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
-import { useAppDispatch } from '../../app/hooks';
-import { authActions, loginAsync } from './authSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { authActions, isAuthenticated, loginAsync } from './authSlice';
 import { useNavigate } from 'react-router-dom';
+import cookies from '../../app/cookies';
+
 
 function Copyright(props: any) {
   return (
@@ -34,8 +36,18 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
-  // let navigate = useNavigate();
+  const isAuth = useAppSelector(isAuthenticated);
+  let navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if(!!cookies.get('accessToken')){
+      dispatch(authActions.login())
+      navigate('/', {replace: true})
+    }
+  },[dispatch, navigate, isAuth])
+  console.log(isAuth);
+  
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -43,10 +55,6 @@ export default function SignIn() {
         password: data.get('password'),
         account: data.get('account'),
     }))
-    // .then((res) => {
-    //   if(!res.error)
-    // })
-    // navigate('/', {replace: true})
   };
 
 

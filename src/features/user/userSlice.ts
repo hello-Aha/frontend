@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import cookies from "../../app/cookies";
 import { RootState } from "../../app/store";
 import { fetchUser, fetchUserDashboard } from "./userAPI";
 
@@ -36,14 +37,16 @@ const initialState: UserState = {
 export const getUserAsync = createAsyncThunk(
 	'users/fetchUser',
 	async () => {
-		// return response;
 		try {
 			const response = await fetchUser();
 			const data = await response.json();
+			if(!response.ok) throw data;
 			return data;
 			
 		} catch (error) {
+			cookies.remove('accessToken', {path: '/'});
 			console.error(error);
+			return Promise.reject(error);
 		}
 	}
 )
@@ -54,10 +57,14 @@ export const getUserDashBoardAsync = createAsyncThunk(
 		try {
 			const response = await fetchUserDashboard();
 			const data = await response.json();
+			if(!response.ok) throw data;
 			return data;
-
+			
 		} catch (error) {
+			cookies.remove('accessToken', {path: '/'});
 			console.error(error);
+			return Promise.reject(error);
+
 		}
 	}
 )
@@ -78,7 +85,7 @@ export const userSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(getUserAsync.fulfilled, (state, action) => {
-		const data: User = {...action.payload};
+				const data: User = {...action.payload};
         state.status = 'idle';
         state.user = data;
       })
@@ -86,18 +93,18 @@ export const userSlice = createSlice({
         state.status = 'failed';
       })
 
-	  .addCase(getUserDashBoardAsync.pending, (state) => {
+	  	.addCase(getUserDashBoardAsync.pending, (state) => {
         state.status = 'loading';
-      })
-      .addCase(getUserDashBoardAsync.fulfilled, (state, action) => {
-		const data: User[] = [...action.payload];
-        state.status = 'idle';
-        state.users = data;
-      })
-      .addCase(getUserDashBoardAsync.rejected, (state) => {
-        state.status = 'failed';
-      });
-	}
+			})
+			.addCase(getUserDashBoardAsync.fulfilled, (state, action) => {
+				const data: User[] = [...action.payload];
+				state.status = 'idle';
+				state.users = data;
+			})
+			.addCase(getUserDashBoardAsync.rejected, (state) => {
+				state.status = 'failed';
+			});
+}
 
 })
 
