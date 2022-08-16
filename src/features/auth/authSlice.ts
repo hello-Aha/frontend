@@ -1,5 +1,5 @@
 import Cookies from 'universal-cookie';
-import { createAsyncThunk, createSlice, isRejectedWithValue } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { userActions } from "../user/userSlice";
 import { login } from "./authAPI";
@@ -59,10 +59,9 @@ export const authSlice = createSlice({
 		.addCase(loginAsync.pending, (state) => {
 			state.status = 'loading';
 		})
-		.addCase(loginAsync.fulfilled, (state, action) => {
+		.addCase(loginAsync.fulfilled, (state) => {
 			state.status = 'idle';
 			state.isAuthenticated = true;
-			// console.log(action.payload);
 		})
 		.addCase(loginAsync.rejected, (state) => {
 			state.status = 'failed';

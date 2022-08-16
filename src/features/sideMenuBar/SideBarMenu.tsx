@@ -9,14 +9,15 @@ import ContentCut from '@mui/icons-material/ContentCut';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
-import { selectSideMenuBar } from './sideMenuBarSlice';
+import { selectSideBarMenu } from './sideBarMenuSlice';
 import { isAuthenticated } from '../auth/authSlice';
 
-export default function SideMenuBar() {
-  const sideBarMenuState = useAppSelector(selectSideMenuBar);
+export default function SideBarMenu() {
+  const sideBarMenuState = useAppSelector(selectSideBarMenu);
   const isAuth = useAppSelector(isAuthenticated);
+  console.log(sideBarMenuState);
   if(!isAuth) return(<></>);
-  if(!sideBarMenuState.isOpen) return(<></>);
+  // if(!sideBarMenuState.isOpen) return(<></>);
   return (
     <Paper sx={{ width: 320, maxWidth: '100%', maxHeight: '100%', position: 'absolute' }}>
       <MenuList sx={{height: '100vh'}}>

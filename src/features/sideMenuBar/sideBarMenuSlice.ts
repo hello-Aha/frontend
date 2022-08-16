@@ -24,7 +24,7 @@ export const sideBarMenuSlice = createSlice({
 
 export const sideMenuBarActions = sideBarMenuSlice.actions;
 
-export const selectSideMenuBar = (state: RootState) => state.sideBar;
+export const selectSideBarMenu = (state: RootState) => state.sideBar;
 
 
 export default sideBarMenuSlice.reducer;

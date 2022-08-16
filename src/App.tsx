@@ -8,14 +8,14 @@ import SignIn from './features/auth/SignIn';
 import ButtonAppBar from './components/ButtonAppBar';
 import { User } from './features/user/User';
 import UserDashboard from './features/user/UserDashboard';
-import SideMenuBar from './features/sideMenuBar/SideMenuBar';
+import SideBarMenu from './features/sideMenuBar/SideBarMenu';
 
 function App() {
-  
+
   return (
     <div className="App">
       <ButtonAppBar/>
-      {}<SideMenuBar/>
+      {}<SideBarMenu/>
       <h1>Welcome to React Router!</h1>
       <Routes>
         <Route path="/" element={<Home />} />
