@@ -1,18 +1,34 @@
 
-
-export const postData = (url: string, data: any) => {
-    return fetch( url, {
-        body: JSON.stringify(data),
-        // credentials: 'same-origin',
-        headers: {
-          'content-type': 'application/json'
-        },
-        method: 'POST'
-      })
+export const postData = (urlString: string, data: any) => {
+  const options: RequestInit = {
+    body: JSON.stringify(data),
+    headers: {
+      'content-type': 'application/json'
+    },
+    method: 'POST'
+  };
+  let url = new URL(urlString);
+    return fetch( url, options)
 }
 
 export const getData = (urlString: string, params: any) => {
-  var url = new URL(urlString);
+  const options: RequestInit = {
+    credentials: 'include', mode: 'cors', method: 'GET'};
+  let url = new URL(urlString);
   url.search = new URLSearchParams(params).toString();
-  return fetch(url, {credentials: 'include', mode: 'cors'})
+  return fetch(url, options);
+}
+
+
+export const patchData = (urlString: string, data: any) => {
+  const options: RequestInit = {
+    body: JSON.stringify(data),
+    credentials: 'include',
+    headers: {
+      'content-type': 'application/json'
+    },
+    method: 'PATCH'
+  };
+  let url = new URL(urlString);
+  return fetch(url, options);
 }
