@@ -1,5 +1,6 @@
+import { Button } from "@mui/material";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import cookies from "../../app/cookies";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { authActions, isAuthenticated } from "../auth/authSlice";
@@ -32,6 +33,7 @@ export function User() {
           <p>{account}</p>
           <p>{email}</p>
           <p>{displayName}</p>
+          <Button component={Link} to="/user/resetpassword">Reset Password</Button>
       </div>
   );
 }

@@ -1,5 +1,5 @@
 import { domain } from "../../app/config"
-import { getData } from "../../app/httpMethod"
+import { getData, patchData } from "../../app/httpMethod"
 
 
 
@@ -9,4 +9,8 @@ export function fetchUser(){
 
 export function fetchUserDashboard(){
     return getData(`${domain}/users`, '')
+}
+
+export function resetPassword(data: any){
+    return patchData(`${domain}/users`, data)
 }

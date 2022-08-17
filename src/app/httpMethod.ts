@@ -2,6 +2,7 @@
 export const postData = (urlString: string, data: any) => {
   const options: RequestInit = {
     body: JSON.stringify(data),
+    credentials: 'include',
     headers: {
       'content-type': 'application/json'
     },

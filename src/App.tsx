@@ -9,14 +9,14 @@ import ButtonAppBar from './components/ButtonAppBar';
 import { User } from './features/user/User';
 import UserDashboard from './features/user/UserDashboard';
 import SideBarMenu from './features/sideMenuBar/SideBarMenu';
+import ResetPassword from './features/user/ResetPassword';
 
 function App() {
 
   return (
     <div className="App">
       <ButtonAppBar/>
-      {}<SideBarMenu/>
-      <h1>Welcome to React Router!</h1>
+      <SideBarMenu/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="about" element={<About />} />
@@ -24,6 +24,7 @@ function App() {
         <Route path="counter" element={<Counter/>}/>
         <Route path="user/profile" element={<User/>}/>
         <Route path="users/dashboard" element={<UserDashboard/>}/>
+        <Route path="user/resetPassword" element={<ResetPassword/>}/>
       </Routes>
       <header className="App-header">
         
