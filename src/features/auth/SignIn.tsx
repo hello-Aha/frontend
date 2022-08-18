@@ -1,4 +1,4 @@
-import  React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,21 +14,19 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { authActions, isAuthenticated, loginAsync } from './authSlice';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { authActions, selectAuth, loginAsyncAction } from './authSlice';
 import cookies from '../../app/cookies';
-
 
 function Copyright(props: any) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
+      </Link>
+      {` ${new Date().getFullYear()} .`}
     </Typography>
   );
 }
@@ -36,27 +34,26 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
-  const isAuth = useAppSelector(isAuthenticated);
-  let navigate = useNavigate();
+  const authState = useAppSelector(selectAuth);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if(!!cookies.get('accessToken')){
-      dispatch(authActions.login())
-      navigate('/', {replace: true})
+    if (authState.status === 'idle' && authState.isAuth) {
+      navigate('/', { replace: true });
     }
-  },[dispatch, navigate, isAuth])
-  console.log(isAuth);
-  
+  }, [navigate, authState]);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await dispatch(loginAsync({
+    await dispatch(
+      loginAsyncAction({
         password: data.get('password'),
         account: data.get('account'),
-    }))
+      })
+    );
   };
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -76,7 +73,12 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -111,33 +113,33 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="/#" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link href="/#" variant="body2">
+                  Don&apos;t have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>
           </Box>
           <Button
-              fullWidth
-              variant="outlined"
-              sx={{ mt: 3, mb: 2 }}
-              startIcon={<FacebookIcon />}
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 3, mb: 2 }}
+            startIcon={<FacebookIcon />}
           >
             SIGN IN WITH FACEBOOK
-        	</Button>
-					<Button
-              fullWidth
-              variant="outlined"
-              sx={{ mt: 3, mb: 2 }}
-              startIcon={<GoogleIcon />}
+          </Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 3, mb: 2 }}
+            startIcon={<GoogleIcon />}
           >
             SIGN IN WITH GOOGLE
-        	</Button>
+          </Button>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>

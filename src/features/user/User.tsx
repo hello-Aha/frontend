@@ -1,39 +1,38 @@
-import { Button } from "@mui/material";
-import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import cookies from "../../app/cookies";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { authActions, isAuthenticated } from "../auth/authSlice";
-import { getUserAsync, selectUser } from "./userSlice";
+import React, { useEffect } from 'react';
+import { Button } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import cookies from '../../app/cookies';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { authActions, selectAuth } from '../auth/authSlice';
+import { getUserAsync, selectUser } from './userSlice';
 
-export function User() {
+export default function User() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const isAuth = useAppSelector(isAuthenticated);
+  const authState = useAppSelector(selectAuth);
   const userState = useAppSelector(selectUser);
-  // const isAuth = useAppSelector(isAuthenticated);
+  // const authState = useAppSelector(selectAuth);
 
-  //check login status and redirect
+  // check login status and redirect
   useEffect(() => {
-    if(!cookies.get('accessToken')){
-      dispatch(authActions.logout())
-      navigate('/signin', {replace: true})
-    }else{
-      dispatch(authActions.login())
-    }
-  },[dispatch, navigate, isAuth])
+    if (authState.status === 'failed') navigate('/signin', { replace: true });
+  }, [dispatch, navigate, authState]);
+  console.log(authState);
 
   useEffect(() => {
-    dispatch(getUserAsync())
-  },[dispatch])
+    dispatch(getUserAsync());
+  }, [dispatch]);
 
-  const {account, email, displayName} = userState.user;
-  return(
-      <div>
-          <p>{account}</p>
-          <p>{email}</p>
-          <p>{displayName}</p>
-          <Button component={Link} to="/user/resetpassword">Reset Password</Button>
-      </div>
+  const { account, email, displayName } = userState.user;
+  if (!authState.isAuth) return null;
+  return (
+    <div>
+      <p>{account}</p>
+      <p>{email}</p>
+      <p>{displayName}</p>
+      <Button component={Link} to="/user/resetpassword">
+        Reset Password
+      </Button>
+    </div>
   );
 }

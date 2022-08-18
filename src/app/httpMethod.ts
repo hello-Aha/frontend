@@ -1,35 +1,44 @@
+export const headMethod = (urlString: string) => {
+  const options: RequestInit = {
+    credentials: 'include',
+    method: 'HEAD',
+  };
+  return fetch(urlString, options);
+};
 
-export const postData = (urlString: string, data: any) => {
+export const postMethod = (urlString: string, data: any) => {
   const options: RequestInit = {
     body: JSON.stringify(data),
     credentials: 'include',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     },
-    method: 'POST'
+    method: 'POST',
   };
-  let url = new URL(urlString);
-    return fetch( url, options)
-}
+  const url = new URL(urlString);
+  return fetch(url, options);
+};
 
-export const getData = (urlString: string, params: any) => {
+export const getMethod = (urlString: string, params: any) => {
   const options: RequestInit = {
-    credentials: 'include', mode: 'cors', method: 'GET'};
-  let url = new URL(urlString);
+    credentials: 'include',
+    mode: 'cors',
+    method: 'GET',
+  };
+  const url = new URL(urlString);
   url.search = new URLSearchParams(params).toString();
   return fetch(url, options);
-}
+};
 
-
-export const patchData = (urlString: string, data: any) => {
+export const patchMethod = (urlString: string, data: any) => {
   const options: RequestInit = {
     body: JSON.stringify(data),
     credentials: 'include',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     },
-    method: 'PATCH'
+    method: 'PATCH',
   };
-  let url = new URL(urlString);
+  const url = new URL(urlString);
   return fetch(url, options);
-}
+};
