@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,10 +16,10 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { authActions, selectAuth, loginAsyncAction } from './authSlice';
-import cookies from '../../app/cookies';
+import { selectAuth, loginAsyncAction } from './authSlice';
+import { AuthInfoDTO } from './AuthInfo.dto';
 
-function Copyright(props: any) {
+function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
@@ -37,6 +37,10 @@ export default function SignIn() {
   const authState = useAppSelector(selectAuth);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [authInfo, setAuthInfo] = useState({
+    account: '',
+    password: '',
+  });
 
   useEffect(() => {
     if (authState.status === 'idle' && authState.isAuth) {
@@ -46,13 +50,11 @@ export default function SignIn() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    await dispatch(
-      loginAsyncAction({
-        password: data.get('password'),
-        account: data.get('account'),
-      })
-    );
+    const payload: AuthInfoDTO = {
+      ...authInfo,
+    };
+
+    await dispatch(loginAsyncAction(payload));
   };
 
   return (
@@ -88,6 +90,10 @@ export default function SignIn() {
               name="account"
               autoComplete="email"
               autoFocus
+              value={authInfo.account}
+              onChange={(e) =>
+                setAuthInfo({ ...authInfo, account: e.target.value })
+              }
             />
             <TextField
               margin="normal"
@@ -98,6 +104,10 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={authInfo.password}
+              onChange={(e) =>
+                setAuthInfo({ ...authInfo, password: e.target.value })
+              }
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -141,7 +151,7 @@ export default function SignIn() {
             SIGN IN WITH GOOGLE
           </Button>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Copyright />
       </Container>
     </ThemeProvider>
   );

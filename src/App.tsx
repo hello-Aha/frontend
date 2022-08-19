@@ -10,16 +10,14 @@ import User from './features/user/User';
 import UserDashboard from './features/user/UserDashboard';
 import SideBarMenu from './features/sideMenuBar/SideBarMenu';
 import ResetPassword from './features/user/ResetPassword';
-import { useAppDispatch, useAppSelector } from './app/hooks';
-import { authenticateAsyncAction, selectAuth } from './features/auth/authSlice';
+import { useAppDispatch } from './app/hooks';
+import { authenticateAsyncAction } from './features/auth/authSlice';
 
 function App() {
   const dispatch = useAppDispatch();
-  const authState = useAppSelector(selectAuth);
   useEffect(() => {
     dispatch(authenticateAsyncAction());
   }, [dispatch]);
-  console.log(authState);
   return (
     <div className="App">
       <ButtonAppBar />

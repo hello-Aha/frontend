@@ -3,10 +3,11 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { userActions } from '../user/userSlice';
 import { authenticate, login } from './authAPI';
+import { AuthInfoDTO } from './AuthInfo.dto';
 
 export interface AuthState {
   isAuth: boolean;
-  status: 'idle' | 'loading' | 'failed';
+  status: 'idle' | 'loading' | 'successed' | 'failed';
 }
 const initialState: AuthState = {
   isAuth: false,
@@ -19,7 +20,6 @@ export const authenticateAsyncAction = createAsyncThunk(
   async (_data, thunkAPI) => {
     try {
       const response = await authenticate();
-      console.log(response);
       if (!response.ok) throw response.statusText;
       return null;
     } catch (error) {
@@ -30,7 +30,7 @@ export const authenticateAsyncAction = createAsyncThunk(
 
 export const loginAsyncAction = createAsyncThunk(
   'authentication/login',
-  async (data: any, thunkAPI) => {
+  async (data: AuthInfoDTO, thunkAPI) => {
     try {
       const response = await login(data);
       const result = await response.json();

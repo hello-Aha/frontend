@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import cookies from '../../app/cookies';
 import { RootState } from '../../app/store';
 import { authActions } from '../auth/authSlice';
-import { fetchUser, fetchUserDashboard } from './userAPI';
+import { UpdateUserDTO } from './dtos/UpdateUserDTO';
+import { fetchUser, fetchUserDashboard, updateUser } from './userAPI';
 
 export interface User {
   firstName: string;
@@ -15,7 +15,7 @@ export interface User {
 
 export interface UserState {
   user: User;
-  status: 'idle' | 'loading' | 'failed';
+  status: 'idle' | 'loading' | 'succeed' | 'failed';
   users: User[];
 }
 
@@ -38,12 +38,32 @@ export const getUserAsync = createAsyncThunk(
     try {
       const response = await fetchUser();
       const data = await response.json();
-      if (!response.ok) throw data;
+      if (!response.ok) {
+        if (response.status === 401) thunkAPI.dispatch(authActions.unAuth());
+        throw data;
+      }
       return data;
     } catch (error) {
-      thunkAPI.dispatch(authActions.unAuth());
       console.error(error);
-      return Promise.reject(error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const updateUserAsyncAction = createAsyncThunk(
+  'users/updateUser',
+  async (data: UpdateUserDTO, thunkAPI) => {
+    try {
+      const response = await updateUser(data);
+      const result = await response.json();
+      if (result.statusCode !== 201) {
+        if (response.status === 401) thunkAPI.dispatch(authActions.unAuth());
+        throw result;
+      }
+      return result.data;
+    } catch (error) {
+      console.error(error);
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -54,12 +74,14 @@ export const getUserDashBoardAsync = createAsyncThunk(
     try {
       const response = await fetchUserDashboard();
       const data = await response.json();
-      if (!response.ok) throw data;
+      if (!response.ok) {
+        if (response.status === 401) thunkAPI.dispatch(authActions.unAuth());
+        throw data;
+      }
       return data;
     } catch (error) {
-      thunkAPI.dispatch(authActions.unAuth());
       console.error(error);
-      return Promise.reject(error);
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -77,6 +99,28 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(updateUserAsyncAction.pending, (state) => {
+        return {
+          ...state,
+          status: 'loading',
+        };
+      })
+      .addCase(updateUserAsyncAction.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: 'idle',
+          user: {
+            ...state.user,
+            ...action.payload,
+          },
+        };
+      })
+      .addCase(updateUserAsyncAction.rejected, (state) => {
+        return {
+          ...state,
+          status: 'failed',
+        };
+      })
       .addCase(getUserAsync.pending, (state) => {
         return {
           ...state,

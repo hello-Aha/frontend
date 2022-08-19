@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import cookies from '../../app/cookies';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { authActions, selectAuth } from '../auth/authSlice';
+import { selectAuth } from '../auth/authSlice';
 import { getUserDashBoardAsync, selectUser } from './userSlice';
 
 export default function UserDashboard() {

@@ -30,6 +30,7 @@
         }
     },
     "rules": {
+        "react/jsx-curly-newline": "off",
         "prettier/prettier": "error",
         "import/extensions": [
             "error",

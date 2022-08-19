@@ -10,5 +10,9 @@ export function fetchUserDashboard() {
 }
 
 export function resetPassword(data: any) {
-  return patchMethod(`${domain}/users`, data);
+  return patchMethod(`${domain}/users/resetPassword`, data);
+}
+
+export function updateUser(data: any) {
+  return patchMethod(`${domain}/users/`, data);
 }
