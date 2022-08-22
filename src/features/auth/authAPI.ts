@@ -8,3 +8,7 @@ export function login(data: any) {
 export function authenticate() {
   return headMethod(`${domain}/auth`);
 }
+
+export function googleAuthenticate(data: any) {
+  return postMethod(`${domain}/auth/google`, data);
+}

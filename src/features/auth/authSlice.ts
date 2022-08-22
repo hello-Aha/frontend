@@ -2,12 +2,12 @@ import Cookies from 'universal-cookie';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { userActions } from '../user/userSlice';
-import { authenticate, login } from './authAPI';
+import { authenticate, googleAuthenticate, login } from './authAPI';
 import { AuthInfoDTO } from './AuthInfo.dto';
 
 export interface AuthState {
   isAuth: boolean;
-  status: 'idle' | 'loading' | 'successed' | 'failed';
+  status: 'idle' | 'loading' | 'succeed' | 'failed';
 }
 const initialState: AuthState = {
   isAuth: false,
@@ -35,23 +35,12 @@ export const loginAsyncAction = createAsyncThunk(
       const response = await login(data);
       const result = await response.json();
       if (!response.ok) throw result;
-      const {
-        email,
-        firstName,
-        lastName,
-        displayName,
-        isActive,
-        account,
-        accessToken,
-      } = result.data;
+      const { email, displayName, isActive, accessToken } = result.data;
       thunkAPI.dispatch(
         userActions.setUser({
           email,
-          firstName,
-          lastName,
           displayName,
           isActive,
-          account,
         })
       );
       cookies.set('accessToken', accessToken, { path: '/' });
@@ -62,6 +51,46 @@ export const loginAsyncAction = createAsyncThunk(
     }
   }
 );
+
+export const loginWithGoogleAsyncAction = createAsyncThunk(
+  'authentication/google',
+  async (data: any, thunkAPI) => {
+    try {
+      const response = await googleAuthenticate(data);
+      const result = await response.json();
+      if (!response.ok) throw result;
+      const { accessToken, user } = result.data;
+
+      if (accessToken === null) {
+        console.log(user);
+        thunkAPI.dispatch(
+          userActions.setUser({
+            googleUserId: user.google_user_id,
+            email: user.email,
+            displayName: user.display_name,
+            isActive: true,
+          })
+        );
+        return result.data;
+      }
+      cookies.set('accessToken', accessToken, { path: '/' });
+
+      return result.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// export const loginWithFacebookAsyncAction = createAsyncThunk(
+//   'authentication/facebook',
+//   async (data: any, thunkAPI) => {
+//     const response = await googleAuthenticate(data);
+//     console.log(response);
+//     const result = await response.json();
+//     console.log(result);
+//   }
+// )
 
 export const authSlice = createSlice({
   name: 'authentication',
@@ -84,6 +113,32 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(loginWithGoogleAsyncAction.pending, (state) => {
+        return {
+          ...state,
+          status: 'loading',
+        };
+      })
+      .addCase(loginWithGoogleAsyncAction.fulfilled, (state, action) => {
+        if (action.payload.accessToken === null) {
+          return {
+            status: 'idle',
+            isAuth: false,
+          };
+        }
+        return {
+          ...state,
+          status: 'succeed',
+          isAuth: true,
+        };
+      })
+      .addCase(loginWithGoogleAsyncAction.rejected, (state) => {
+        return {
+          ...state,
+          status: 'failed',
+          isAuth: false,
+        };
+      })
       .addCase(authenticateAsyncAction.pending, (state) => {
         return {
           ...state,
@@ -93,7 +148,7 @@ export const authSlice = createSlice({
       .addCase(authenticateAsyncAction.fulfilled, (state) => {
         return {
           ...state,
-          status: 'idle',
+          status: 'succeed',
           isAuth: true,
         };
       })
@@ -113,7 +168,7 @@ export const authSlice = createSlice({
       .addCase(loginAsyncAction.fulfilled, (state) => {
         return {
           ...state,
-          status: 'idle',
+          status: 'succeed',
           isAuth: true,
         };
       })

@@ -22,7 +22,8 @@ export default function User() {
 
   // check login status and redirect
   useEffect(() => {
-    if (authState.status === 'failed') navigate('/signin', { replace: true });
+    if (authState.status === 'failed' && !authState.isAuth)
+      navigate('/signin', { replace: true });
   }, [dispatch, navigate, authState]);
 
   useEffect(() => {

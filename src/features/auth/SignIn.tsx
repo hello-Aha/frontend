@@ -3,33 +3,25 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
+import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import GoogleIcon from '@mui/icons-material/Google';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectAuth, loginAsyncAction } from './authSlice';
 import { AuthInfoDTO } from './AuthInfo.dto';
+import GoogleLoginButton from './GoogleLoginButton';
+import FacebookLoginButton from './FacebookLoginButton';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>
-      {` ${new Date().getFullYear()} .`}
-    </Typography>
-  );
-}
+const HorizontalLine = styled.div`
+  height: 2px;
+  width: 100%;
+  background: #bfc6de;
+`;
 
 const theme = createTheme();
 
@@ -43,7 +35,7 @@ export default function SignIn() {
   });
 
   useEffect(() => {
-    if (authState.status === 'idle' && authState.isAuth) {
+    if (authState.status !== 'failed' && authState.isAuth) {
       navigate('/', { replace: true });
     }
   }, [navigate, authState]);
@@ -86,7 +78,7 @@ export default function SignIn() {
               required
               fullWidth
               id="account"
-              label="Email Address or Account"
+              label="Email"
               name="account"
               autoComplete="email"
               autoFocus
@@ -109,10 +101,6 @@ export default function SignIn() {
                 setAuthInfo({ ...authInfo, password: e.target.value })
               }
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth
@@ -121,37 +109,29 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="/#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/#" variant="body2">
-                  Don&apos;t have an account? Sign Up
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
+          <HorizontalLine />
           <Button
             fullWidth
             variant="outlined"
             sx={{ mt: 3, mb: 2 }}
+            component={Link}
+            to="/signup"
+          >
+            Don&apos;t have an account? Sign Up
+          </Button>
+          <FacebookLoginButton />
+
+          {/* <Button
+            fullWidth
+            variant="outlined"
+            sx={{ mb: 2 }}
             startIcon={<FacebookIcon />}
           >
             SIGN IN WITH FACEBOOK
-          </Button>
-          <Button
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 3, mb: 2 }}
-            startIcon={<GoogleIcon />}
-          >
-            SIGN IN WITH GOOGLE
-          </Button>
+          </Button> */}
+          <GoogleLoginButton />
         </Box>
-        <Copyright />
       </Container>
     </ThemeProvider>
   );
