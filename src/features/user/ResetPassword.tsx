@@ -18,7 +18,6 @@ export default function ResetPassword() {
       newPassword,
       repeatNewPassword,
     };
-    console.log(payload);
     dispatch(resetPasswordAsyncAction(payload));
   };
 

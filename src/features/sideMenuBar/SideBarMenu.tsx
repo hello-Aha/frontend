@@ -14,7 +14,7 @@ import { selectAuth } from '../auth/authSlice';
 export default function SideBarMenu() {
   const sideBarMenuState = useAppSelector(selectSideBarMenu);
   const authState = useAppSelector(selectAuth);
-  if (!authState.isAuth) return null;
+  // if (!authState.isAuth) return null;
   if (!sideBarMenuState.isOpen) return null;
   return (
     <Paper
@@ -23,6 +23,7 @@ export default function SideBarMenu() {
         maxWidth: '100%',
         maxHeight: '100%',
         position: 'absolute',
+        zIndex: 2,
       }}
     >
       <MenuList sx={{ height: '100vh' }}>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { domain } from '../../app/config';
 import { headMethod, postMethod } from '../../app/httpMethod';
 import { OauthDTO } from './dtos/OauthDTO';

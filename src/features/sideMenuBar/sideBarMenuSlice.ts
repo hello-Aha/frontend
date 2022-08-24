@@ -19,12 +19,6 @@ export const sideBarMenuSlice = createSlice({
         isOpen: action.payload,
       };
     },
-    close: (state) => {
-      return {
-        ...state,
-        isOpen: false,
-      };
-    },
   },
 });
 

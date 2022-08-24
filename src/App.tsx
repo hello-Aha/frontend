@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
 import { Route, Routes } from 'react-router-dom';
-import Counter from './features/counter/Counter';
 import './App.css';
 import Home from './components/Home';
 import About from './components/About';
@@ -15,6 +12,7 @@ import ResetPassword from './features/user/ResetPassword';
 import { useAppDispatch } from './app/hooks';
 import { authenticateAsyncAction } from './features/auth/authSlice';
 import SignUp from './features/auth/SignUp';
+import Mask from './components/Mask';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -25,13 +23,12 @@ function App() {
     <div className="App">
       <ButtonAppBar />
       <SideBarMenu />
-
+      <Mask />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="signin" element={<SignIn />} />
         <Route path="signup" element={<SignUp />} />
-        <Route path="counter" element={<Counter />} />
         <Route path="user/profile" element={<User />} />
         <Route path="users/dashboard" element={<UserDashboard />} />
         <Route path="user/resetPassword" element={<ResetPassword />} />

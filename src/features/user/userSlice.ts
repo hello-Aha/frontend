@@ -4,12 +4,7 @@ import { authActions } from '../auth/authSlice';
 import { ResetPasswordDTO } from './dtos/ResetPasswordDTO';
 import { UpdateUserDTO } from './dtos/UpdateUserDTO';
 import { UserDTO } from './dtos/UserDTO';
-import {
-  fetchUser,
-  fetchUserDashboard,
-  resetPassword,
-  updateUser,
-} from './userAPI';
+import { fetchUser, resetPassword, updateUser } from './userAPI';
 
 export interface UserState {
   user: UserDTO;
@@ -43,7 +38,6 @@ export const getUserAsync = createAsyncThunk(
       }
       return data;
     } catch (error) {
-      console.error(error);
       return thunkAPI.rejectWithValue(error);
     }
   }
@@ -51,9 +45,8 @@ export const getUserAsync = createAsyncThunk(
 
 export const resetPasswordAsyncAction = createAsyncThunk(
   'users/resetPassword',
-  async (data: ResetPasswordDTO, thunkAPI) => {
+  async (data: ResetPasswordDTO) => {
     const response = await resetPassword(data);
-    console.log(response);
     const result = await response.json();
     return result;
   }
@@ -71,7 +64,6 @@ export const updateUserAsyncAction = createAsyncThunk(
       }
       return result.data;
     } catch (error) {
-      console.error(error);
       return thunkAPI.rejectWithValue(error);
     }
   }

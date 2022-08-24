@@ -7,7 +7,6 @@ import {
   facebookAuthenticate,
   googleAuthenticate,
   login,
-  signUp,
 } from './authAPI';
 import { AuthInfoDTO } from './AuthInfo.dto';
 import { OauthDTO } from './dtos/OauthDTO';
@@ -87,20 +86,6 @@ export const loginWithGoogleAsyncAction = createAsyncThunk(
     }
   }
 );
-
-// export const signUpAsyncAction = createAsyncThunk(
-//   'authentication/signUp',
-//   async (data: any, thunkAPI) => {
-//     try {
-//       const response = await signUp(data);
-//       if (!response.ok) throw new Error('sign up failed');
-//       const result = await response.json();
-//       const { accessToken } = result.data;
-//       cookies.set('accessToken', accessToken, { path: '/' });
-//       // const result = await response.json();
-//     } catch (error) {}
-//   }
-// );
 
 export const loginWithFacebookAsyncAction = createAsyncThunk(
   'authentication/facebook',

@@ -56,7 +56,7 @@ export default function GoogleLoginButton() {
         scope: 'https://www.googleapis.com/auth/userinfo.email',
       });
     });
-  }, []);
+  }, [REACT_APP_GOOGLE_APP_ID]);
   const googleResponse = (
     response: GoogleLoginResponse | GoogleLoginResponseOffline
   ) => {
@@ -71,7 +71,7 @@ export default function GoogleLoginButton() {
           if (res.accessToken === null) navigate('/signup', { replace: true });
         })
         .catch((error) => {
-          console.log(error);
+          throw new Error(error);
         });
     }
   };

@@ -1,21 +1,7 @@
-import React, { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { authActions, selectAuth } from '../features/auth/authSlice';
+import React from 'react';
 import logo from '../logo.svg';
 
 export default function Home() {
-  // const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const authState = useAppSelector(selectAuth);
-  // check login status and redirect
-  // useEffect(() => {
-  //   if (authState) {
-  //     dispatch(authActions.auth());
-  //   } else {
-  //     dispatch(authActions.unAuth());
-  //   }
-  // }, [dispatch, authState]);
-
   return (
     <>
       <img src={logo} className="App-logo" alt="logo" />

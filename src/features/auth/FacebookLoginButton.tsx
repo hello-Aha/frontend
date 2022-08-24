@@ -56,7 +56,7 @@ export default function FacebookLoginButton() {
           if (res.accessToken === null) navigate('/signup', { replace: true });
         })
         .catch((error) => {
-          console.log(error);
+          throw new Error(error);
         });
     }
   };

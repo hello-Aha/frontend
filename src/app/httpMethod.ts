@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const headMethod = (urlString: string) => {
   const options: RequestInit = {
     credentials: 'include',

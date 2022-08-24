@@ -39,7 +39,7 @@ export default function SignUp() {
           navigate('/user/profile', { replace: true });
         })
         .catch((error) => {
-          console.error(error);
+          throw new Error(error);
         });
   };
   return (

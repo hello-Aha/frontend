@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { domain } from '../../app/config';
 import { getMethod, patchMethod } from '../../app/httpMethod';
 

@@ -32,7 +32,6 @@ export const getUserDashboardAsyncAction = createAsyncThunk(
       }
       return result.data;
     } catch (error) {
-      console.error(error);
       return thunkAPI.rejectWithValue(error);
     }
   }
