@@ -55,7 +55,6 @@ export const resetPasswordAsyncAction = createAsyncThunk(
     const response = await resetPassword(data);
     console.log(response);
     const result = await response.json();
-    console.log(result);
     return result;
   }
 );

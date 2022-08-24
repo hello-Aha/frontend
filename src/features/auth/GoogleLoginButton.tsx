@@ -46,14 +46,13 @@ const GoogleLogo = styled.div`
 `;
 
 export default function GoogleLoginButton() {
+  const { REACT_APP_GOOGLE_APP_ID } = process.env;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const clientID =
-    '787104897033-15n7tvnbt3qt8a3od4ksnkcovul99t7e.apps.googleusercontent.com';
   useEffect(() => {
     gapi.load('client:auth2', () => {
       gapi.client.init({
-        clientId: clientID,
+        clientId: REACT_APP_GOOGLE_APP_ID,
         scope: 'https://www.googleapis.com/auth/userinfo.email',
       });
     });
@@ -64,24 +63,21 @@ export default function GoogleLoginButton() {
     if ('accessToken' in response) {
       dispatch(
         loginWithGoogleAsyncAction({
-          profile: response.profileObj,
           accessToken: response.accessToken,
         })
       )
         .unwrap()
-        .then((originalPromiseResult) => {
-          console.log(originalPromiseResult);
-          if (originalPromiseResult.accessToken === null)
-            navigate('/signup', { replace: true });
+        .then((res) => {
+          if (res.accessToken === null) navigate('/signup', { replace: true });
         })
-        .catch((rejectedValueOrSerializedError) => {
-          console.log(rejectedValueOrSerializedError);
+        .catch((error) => {
+          console.log(error);
         });
     }
   };
   return (
     <GoogleLogin
-      clientId={clientID}
+      clientId={`${REACT_APP_GOOGLE_APP_ID}`}
       render={(renderProps) => (
         <GoogleButton onClick={renderProps.onClick}>
           <GoogleLogo>

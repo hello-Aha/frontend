@@ -2,8 +2,15 @@ import Cookies from 'universal-cookie';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { userActions } from '../user/userSlice';
-import { authenticate, googleAuthenticate, login } from './authAPI';
+import {
+  authenticate,
+  facebookAuthenticate,
+  googleAuthenticate,
+  login,
+  signUp,
+} from './authAPI';
 import { AuthInfoDTO } from './AuthInfo.dto';
+import { OauthDTO } from './dtos/OauthDTO';
 
 export interface AuthState {
   isAuth: boolean;
@@ -46,7 +53,6 @@ export const loginAsyncAction = createAsyncThunk(
       cookies.set('accessToken', accessToken, { path: '/' });
       return result;
     } catch (error) {
-      // console.log(error);
       return thunkAPI.rejectWithValue(error);
     }
   }
@@ -54,7 +60,7 @@ export const loginAsyncAction = createAsyncThunk(
 
 export const loginWithGoogleAsyncAction = createAsyncThunk(
   'authentication/google',
-  async (data: any, thunkAPI) => {
+  async (data: OauthDTO, thunkAPI) => {
     try {
       const response = await googleAuthenticate(data);
       const result = await response.json();
@@ -62,12 +68,12 @@ export const loginWithGoogleAsyncAction = createAsyncThunk(
       const { accessToken, user } = result.data;
 
       if (accessToken === null) {
-        console.log(user);
+        const { googleUserId, displayName, email } = user;
         thunkAPI.dispatch(
           userActions.setUser({
-            googleUserId: user.google_user_id,
-            email: user.email,
-            displayName: user.display_name,
+            googleUserId,
+            email,
+            displayName,
             isActive: true,
           })
         );
@@ -82,15 +88,49 @@ export const loginWithGoogleAsyncAction = createAsyncThunk(
   }
 );
 
-// export const loginWithFacebookAsyncAction = createAsyncThunk(
-//   'authentication/facebook',
+// export const signUpAsyncAction = createAsyncThunk(
+//   'authentication/signUp',
 //   async (data: any, thunkAPI) => {
-//     const response = await googleAuthenticate(data);
-//     console.log(response);
-//     const result = await response.json();
-//     console.log(result);
+//     try {
+//       const response = await signUp(data);
+//       if (!response.ok) throw new Error('sign up failed');
+//       const result = await response.json();
+//       const { accessToken } = result.data;
+//       cookies.set('accessToken', accessToken, { path: '/' });
+//       // const result = await response.json();
+//     } catch (error) {}
 //   }
-// )
+// );
+
+export const loginWithFacebookAsyncAction = createAsyncThunk(
+  'authentication/facebook',
+  async (data: OauthDTO, thunkAPI) => {
+    try {
+      const response = await facebookAuthenticate(data);
+      const result = await response.json();
+      if (!response.ok) throw result;
+      const { accessToken, user } = result.data;
+
+      if (accessToken === null) {
+        const { facebookUserId, displayName, email } = user;
+        thunkAPI.dispatch(
+          userActions.setUser({
+            facebookUserId,
+            email,
+            displayName,
+            isActive: true,
+          })
+        );
+        return result.data;
+      }
+      cookies.set('accessToken', accessToken, { path: '/' });
+
+      return result.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 export const authSlice = createSlice({
   name: 'authentication',
@@ -113,6 +153,32 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(loginWithFacebookAsyncAction.pending, (state) => {
+        return {
+          ...state,
+          status: 'loading',
+        };
+      })
+      .addCase(loginWithFacebookAsyncAction.fulfilled, (state, action) => {
+        if (action.payload.accessToken === null) {
+          return {
+            status: 'idle',
+            isAuth: false,
+          };
+        }
+        return {
+          ...state,
+          status: 'succeed',
+          isAuth: true,
+        };
+      })
+      .addCase(loginWithFacebookAsyncAction.rejected, (state) => {
+        return {
+          ...state,
+          status: 'failed',
+          isAuth: false,
+        };
+      })
       .addCase(loginWithGoogleAsyncAction.pending, (state) => {
         return {
           ...state,

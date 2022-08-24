@@ -1,15 +1,19 @@
 import { Button, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useAppSelector } from '../../app/hooks';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectUser } from '../user/userSlice';
+import { signUp } from './authAPI';
+import { loginAsyncAction } from './authSlice';
 
 export default function SignUp() {
   const userState = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [password, setPassword] = useState('');
   useEffect(() => {
-    console.log(userState);
     setEmail(userState.user.email);
     setDisplayName(userState.user.displayName);
   }, [userState]);
@@ -21,7 +25,22 @@ export default function SignUp() {
       displayName,
       password,
     };
-    console.log(payload);
+    const response = await signUp(payload);
+    const data = await response.json();
+    if (data.statusCode === 201)
+      dispatch(
+        loginAsyncAction({
+          email,
+          password,
+        })
+      )
+        .unwrap()
+        .then(() => {
+          navigate('/user/profile', { replace: true });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
   };
   return (
     <div>

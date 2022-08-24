@@ -1,7 +1,12 @@
 import React from 'react';
-import FacebookLogin from '@greatsumini/react-facebook-login';
+import FacebookLogin, {
+  LoginResponse,
+} from '@greatsumini/react-facebook-login';
 import styled from '@emotion/styled';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
+import { loginWithFacebookAsyncAction } from './authSlice';
 
 const FaceBookButton = styled.div`
   background-color: rgb(255 255 255);
@@ -36,21 +41,29 @@ const FacebookLogo = styled.div`
 `;
 
 export default function FacebookLoginButton() {
-  const responseFacebook = (response: any) => {
-    console.log(response);
+  const { REACT_APP_FACEBOOK_APP_ID } = process.env;
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const responseFacebook = (response: LoginResponse['authResponse']) => {
+    if (response !== undefined && 'accessToken' in response) {
+      dispatch(
+        loginWithFacebookAsyncAction({
+          accessToken: response.accessToken,
+        })
+      )
+        .unwrap()
+        .then((res) => {
+          if (res.accessToken === null) navigate('/signup', { replace: true });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
   return (
     <FacebookLogin
-      appId="378457574458492"
-      onSuccess={(response) => {
-        console.log('Login Success!', response);
-      }}
-      onFail={(error) => {
-        console.log('Login Failed!', error);
-      }}
-      onProfileSuccess={(response) => {
-        console.log('Get Profile Success!', response);
-      }}
+      appId={`${REACT_APP_FACEBOOK_APP_ID}`}
+      onSuccess={responseFacebook}
       render={({ onClick }) => (
         <FaceBookButton onClick={onClick}>
           <FacebookLogo>

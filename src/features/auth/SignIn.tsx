@@ -9,7 +9,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectAuth, loginAsyncAction } from './authSlice';
@@ -30,7 +29,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [authInfo, setAuthInfo] = useState({
-    account: '',
+    email: '',
     password: '',
   });
 
@@ -77,14 +76,15 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="account"
+              id="email"
               label="Email"
-              name="account"
+              name="email"
               autoComplete="email"
+              type="email"
               autoFocus
-              value={authInfo.account}
+              value={authInfo.email}
               onChange={(e) =>
-                setAuthInfo({ ...authInfo, account: e.target.value })
+                setAuthInfo({ ...authInfo, email: e.target.value })
               }
             />
             <TextField
@@ -121,15 +121,6 @@ export default function SignIn() {
             Don&apos;t have an account? Sign Up
           </Button>
           <FacebookLoginButton />
-
-          {/* <Button
-            fullWidth
-            variant="outlined"
-            sx={{ mb: 2 }}
-            startIcon={<FacebookIcon />}
-          >
-            SIGN IN WITH FACEBOOK
-          </Button> */}
           <GoogleLoginButton />
         </Box>
       </Container>

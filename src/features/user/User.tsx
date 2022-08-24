@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectAuth } from '../auth/authSlice';
 import { getUserAsync, selectUser, updateUserAsyncAction } from './userSlice';
 import { UpdateUserDTO } from './dtos/UpdateUserDTO';
+import Unverified from '../../components/Unverified';
 
 const HorizontalLine = styled.hr`
   background-color: #aea0a0;
@@ -31,7 +32,6 @@ export default function User() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(userState);
     setUser(userState.user);
   }, [userState]);
 
@@ -44,6 +44,8 @@ export default function User() {
   };
 
   if (!authState.isAuth) return null;
+  if (!userState.user.isActive)
+    return <Unverified email={user.email} displayName={user.displayName} />;
   return (
     <div>
       <h2>User Profile</h2>

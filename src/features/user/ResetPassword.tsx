@@ -13,7 +13,7 @@ export default function ResetPassword() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const payload: ResetPasswordDTO = {
-      account: usertState.user.email,
+      email: usertState.user.email,
       password,
       newPassword,
       repeatNewPassword,

@@ -52,7 +52,6 @@ export const userDashboardSlice = createSlice({
       })
       .addCase(getUserDashboardAsyncAction.fulfilled, (state, action) => {
         const { items, meta } = action.payload;
-        console.log(action.payload);
         const data: UserDTO[] = [...items];
         const { userCounts, avgOfActvieUserInSevenDay, numOfActiveUserToday } =
           meta;
