@@ -3,13 +3,15 @@ import { Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { authActions, selectAuth } from './authSlice';
+import { logout } from './authAPI';
 
 export default function AuthButton() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const authState = useAppSelector(selectAuth);
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
     dispatch(authActions.unAuth());
+    await logout();
     navigate('/signin', { replace: true });
   };
   if (authState.isAuth) {

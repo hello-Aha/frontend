@@ -7,6 +7,10 @@ export function login(data: any) {
   return postMethod(`${domain}/auth/login`, data);
 }
 
+export function logout() {
+  return postMethod(`${domain}/auth/logout`, {});
+}
+
 export function signUp(data: any) {
   return postMethod(`${domain}/auth/signup`, data);
 }
