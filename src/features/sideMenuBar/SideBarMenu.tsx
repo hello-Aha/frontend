@@ -14,7 +14,7 @@ import { selectAuth } from '../auth/authSlice';
 export default function SideBarMenu() {
   const sideBarMenuState = useAppSelector(selectSideBarMenu);
   const authState = useAppSelector(selectAuth);
-  // if (!authState.isAuth) return null;
+  if (!authState.isAuth) return null;
   if (!sideBarMenuState.isOpen) return null;
   return (
     <Paper

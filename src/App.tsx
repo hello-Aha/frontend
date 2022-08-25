@@ -12,7 +12,8 @@ import ResetPassword from './features/user/ResetPassword';
 import { useAppDispatch } from './app/hooks';
 import { authenticateAsyncAction } from './features/auth/authSlice';
 import SignUp from './features/auth/SignUp';
-import Mask from './components/Mask';
+import Mask from './features/sideMenuBar/Mask';
+// import Notification from './features/notification/Notification';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -24,6 +25,7 @@ function App() {
       <ButtonAppBar />
       <SideBarMenu />
       <Mask />
+      {/* <Notification /> */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="about" element={<About />} />

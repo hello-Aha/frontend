@@ -3,9 +3,11 @@ import authReducer from '../features/auth/authSlice';
 import userReducer from '../features/user/userSlice';
 import sideBarMenuReducer from '../features/sideMenuBar/sideBarMenuSlice';
 import userDashBoardReducer from '../features/userDashboard/userDashboardSlice';
+import notificationReducer from '../features/notification/notificationSlice';
 
 export const store = configureStore({
   reducer: {
+    notification: notificationReducer,
     auth: authReducer,
     user: userReducer,
     sideBar: sideBarMenuReducer,

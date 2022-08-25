@@ -1,10 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import {
-  selectSideBarMenu,
-  sideMenuBarActions,
-} from '../features/sideMenuBar/sideBarMenuSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectSideBarMenu, sideMenuBarActions } from './sideBarMenuSlice';
 
 interface Props {
   display: string;
