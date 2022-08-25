@@ -1,4 +1,3 @@
-import Cookies from 'universal-cookie';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { userActions } from '../user/userSlice';
@@ -10,6 +9,9 @@ import {
 } from './authAPI';
 import { AuthInfoDTO } from './AuthInfo.dto';
 import { OauthDTO } from './dtos/OauthDTO';
+import cookies from '../../app/cookies';
+
+const { REACT_APP_SERVER_SIDE_DOMAIN } = process.env;
 
 export interface AuthState {
   isAuth: boolean;
@@ -19,7 +21,6 @@ const initialState: AuthState = {
   isAuth: false,
   status: 'idle',
 };
-const cookies = new Cookies();
 
 export const authenticateAsyncAction = createAsyncThunk(
   'authentication/authenticate',
@@ -49,7 +50,10 @@ export const loginAsyncAction = createAsyncThunk(
           isActive,
         })
       );
-      cookies.set('accessToken', accessToken, { path: '/' });
+      cookies.set('accessToken', accessToken, {
+        path: '/',
+        domain: REACT_APP_SERVER_SIDE_DOMAIN,
+      });
       return result;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -78,7 +82,10 @@ export const loginWithGoogleAsyncAction = createAsyncThunk(
         );
         return result.data;
       }
-      cookies.set('accessToken', accessToken, { path: '/' });
+      cookies.set('accessToken', accessToken, {
+        path: '/',
+        domain: REACT_APP_SERVER_SIDE_DOMAIN,
+      });
 
       return result.data;
     } catch (error) {
@@ -108,7 +115,10 @@ export const loginWithFacebookAsyncAction = createAsyncThunk(
         );
         return result.data;
       }
-      cookies.set('accessToken', accessToken, { path: '/' });
+      cookies.set('accessToken', accessToken, {
+        path: '/',
+        domain: REACT_APP_SERVER_SIDE_DOMAIN,
+      });
 
       return result.data;
     } catch (error) {
@@ -128,7 +138,10 @@ export const authSlice = createSlice({
       };
     },
     unAuth: (state) => {
-      cookies.remove('accessToken', { path: '/' });
+      cookies.remove('accessToken', {
+        path: '/',
+        domain: REACT_APP_SERVER_SIDE_DOMAIN,
+      });
       return {
         ...state,
         isAuth: false,
