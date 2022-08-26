@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { ResetPasswordDTO } from './dtos/ResetPasswordDTO';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { resetPasswordAsyncAction, selectUser } from './userSlice';
@@ -7,6 +8,7 @@ import { resetPasswordAsyncAction, selectUser } from './userSlice';
 export default function ResetPassword() {
   const usertState = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [repeatNewPassword, setRepeatNewPassword] = useState('');
@@ -19,6 +21,7 @@ export default function ResetPassword() {
       repeatNewPassword,
     };
     dispatch(resetPasswordAsyncAction(payload));
+    navigate('/user/profile', { replace: true });
   };
 
   return (
